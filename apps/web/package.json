@@ -1,0 +1,38 @@
+{
+  "name": "@bleu-builders/tech-challenge-web",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "check": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "deploy": "",
+    "clean": "rm -rf .next node_modules"
+  },
+  "dependencies": {
+    "@bleu-builders/tech-challenge-ui": "workspace:*",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@tailwindcss/postcss": "^4.0.5",
+    "@tanstack/react-query": "^5.66.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "connectkit": "^1.8.2",
+    "lucide-react": "^0.475.0",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "wagmi": "^2.14.11",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.5",
+    "typescript": "^5"
+  }
+}

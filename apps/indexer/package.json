@@ -1,0 +1,22 @@
+{
+  "name": "@bleu-builders/tech-challenge-indexer",
+  "private": true,
+  "scripts": {
+    "dev": "ponder dev",
+    "start": "ponder start",
+    "check": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "deploy": "",
+    "clean": "rm -rf .ponder node_modules"
+  },
+  "dependencies": {
+    "hono": "^4.5.0",
+    "ponder": "^0.9.5",
+    "viem": "^2.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@biomejs/biome": "1.9.4",
+    "typescript": "^5.7.3"
+  }
+}

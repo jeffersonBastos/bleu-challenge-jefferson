@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+@layer base {
+  :root {
+    --background: 255 253 253; /* RGB values for #fffdfd */
+    --foreground: 0 0 0; /* RGB values for #000000 */
+
+    --content: 255 255 255; /* RGB values for #FFFFFF */
+    --content-foreground: 0 0 0; /* RGB values for #000000 */
+
+    --primary: 255 4 32; /* RGB values for #ff0420 */
+    --primary-foreground: 255 253 253; /* RGB values for #fffdfd */
+
+    --sub-text: 122 122 122; /* RGB values for #7a7a7a */
+
+    --success: 92 187 37; /* RGB values for #5cbb25 */
+    --important: 255 222 8; /* RGB values for #ffde08 */
+    --caution: 254 157 1; /* RGB values for #fe9d01 */
+    --error: 204 0 23; /* RGB values for #cc0017 */
+  }
+
+  .dark {
+    --background: 0 0 0; /* RGB values for #000000 */
+    --foreground: 255 255 255; /* RGB values for #ffffff */
+
+    --content: 25 25 25; /* RGB values for #191919 */
+    --content-foreground: 255 255 255; /* RGB values for #ffffff */
+
+    --primary: 255 4 32; /* RGB values for #ff0420 */
+    --primary-foreground: 0 0 0; /* RGB values for #000000 */
+
+    --sub-text: 184 184 184; /* RGB values for #b8b8b8 */
+  }
+}

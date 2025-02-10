@@ -1,0 +1,12 @@
+{
+  "name": "@bleu-builders/tech-challenge-contracts",
+  "private": true,
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test",
+    "anvil": "anvil",
+    "deploy": "forge script script/BleuNFT.s.sol:BleuNFTScript --rpc-url http://localhost:8545 --private-key $PRIVATE_KEY --broadcast",
+    "deploy:testnet": "forge script script/BleuNFT.s.sol:BleuNFTScript --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify",
+    "clean": "forge clean"
+  }
+}

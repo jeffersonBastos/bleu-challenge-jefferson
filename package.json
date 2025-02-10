@@ -1,0 +1,42 @@
+{
+  "name": "@bleu-builders/tech-challenge",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:indexer": "pnpm --filter indexer dev",
+    "dev:anvil": "pnpm --filter contracts anvil",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter web build",
+    "build:indexer": "pnpm --filter indexer build",
+    "build:contracts": "pnpm --filter contracts build",
+    "test": "pnpm -r test",
+    "test:web": "pnpm --filter web test",
+    "test:indexer": "pnpm --filter indexer test",
+    "test:contracts": "pnpm --filter contracts test",
+    "check": "pnpm -r check",
+    "typecheck": "pnpm -r typecheck",
+    "contracts:build": "pnpm --filter contracts build",
+    "contracts:test": "pnpm --filter contracts test",
+    "contracts:deploy": "pnpm --filter contracts deploy",
+    "contracts:deploy:testnet": "pnpm --filter contracts deploy:testnet",
+    "setup:env": "node scripts/setup-env.js",
+    "deploy:web": "pnpm --filter web deploy",
+    "deploy:indexer": "pnpm --filter indexer deploy",
+    "deploy:contracts": "pnpm --filter contracts deploy:testnet",
+    "clean": "pnpm -r clean && rm -rf node_modules"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3",
+    "@biomejs/biome": "1.9.4"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.2.1"
+}
