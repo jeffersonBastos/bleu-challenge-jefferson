@@ -1,5 +1,5 @@
 import { ponder } from "ponder:registry";
-import { events } from "ponder:schema";
+import { events, attestations } from "ponder:schema";
 
 // eventType can be an enum
 function logs(eventType: string, tokenId: string) {
@@ -56,3 +56,21 @@ ponder.on("BleuNFT:Mint", async ({ event, context }) => {
 
   logs(eventType, tokenId);
 });
+
+// ========== Handler do MasterStakerRegistry ==========
+
+ponder.on(
+  "MasterStakerRegistry:AttestationGranted",
+  async ({ event, context }) => {
+    const { db } = context;
+    const user = event.args.user as string;
+
+    await db.insert(attestations).values({
+      id: `${event.transaction.hash}-${event.log.logIndex}`,
+      user,
+      timestamp: event.block.timestamp,
+    });
+
+    console.log(`Successfully Attestation Granted to: ${user}`);
+  }
+);
