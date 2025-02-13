@@ -3,27 +3,33 @@ pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {BleuNFT} from "../src/BleuNFT.sol";
+import { MasterStakerRegistry } from "../src/MasterStakerRegistry.sol";
+import { IMasterStakerRegistry } from "../src/IMasterStakerRegistry.sol";
 
 contract BleuNFTScript is Script {
     BleuNFT public nft;
+    IMasterStakerRegistry public registry;
 
     function setUp() public {}
 
     function run() public {
         vm.startBroadcast();
 
-        nft = new BleuNFT();
+
+        registry = new MasterStakerRegistry();
+        console.log("MasterStakerRegistry deployed at:", address(registry));
+
+        nft = new BleuNFT(registry);
+        console.log("BleuNFT deployed at::", address(nft));
+
+
+        registry.transferOwnership(address(nft));
+        console.log("Ownership of registry transferred to NFT contract");
+
 
         for(uint i = 1; i <= 10; i++){
-            nft.mint(msg.sender, i);
+            nft.mint(msg.sender);
         }
-        nft.stake(1);
-        nft.stake(2);
-
-        
-        console.log("Contract deployed at:", address(nft));
-
-        console.log(nft.stakedOwner(1));
 
         vm.stopBroadcast();
     }
