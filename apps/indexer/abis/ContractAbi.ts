@@ -1,5 +1,15 @@
 export const ContractAbi = [
-  { type: "constructor", inputs: [], stateMutability: "nonpayable" },
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "_registry",
+        type: "address",
+        internalType: "contract IMasterStakerRegistry",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
   {
     type: "function",
     name: "approve",
@@ -19,9 +29,23 @@ export const ContractAbi = [
   },
   {
     type: "function",
+    name: "contractOwner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getApproved",
     inputs: [{ name: "tokenId", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "hasAlreadyGranted",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
@@ -37,10 +61,7 @@ export const ContractAbi = [
   {
     type: "function",
     name: "mint",
-    inputs: [
-      { name: "to", type: "address", internalType: "address" },
-      { name: "tokenId", type: "uint256", internalType: "uint256" },
-    ],
+    inputs: [{ name: "to", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -56,6 +77,19 @@ export const ContractAbi = [
     name: "ownerOf",
     inputs: [{ name: "tokenId", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "registry",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IMasterStakerRegistry",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -97,6 +131,13 @@ export const ContractAbi = [
     inputs: [{ name: "tokenId", type: "uint256", internalType: "uint256" }],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "stakeTimestamp",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -143,6 +184,13 @@ export const ContractAbi = [
     inputs: [{ name: "tokenId", type: "uint256", internalType: "uint256" }],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "userStakeCount",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
   },
   {
     type: "event",
