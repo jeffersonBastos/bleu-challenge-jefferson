@@ -1,6 +1,9 @@
-import { onchainTable } from 'ponder';
+import { onchainTable } from "ponder";
 
-export const example = onchainTable('example', (t) => ({
+export const events = onchainTable("Event", (t) => ({
   id: t.text().primaryKey(),
-  name: t.text(),
+  eventType: t.text().$type<string>(),
+  owner: t.text(),
+  tokenId: t.text(),
+  timestamp: t.bigint(),
 }));
