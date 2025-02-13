@@ -13,7 +13,17 @@ contract BleuNFTScript is Script {
         vm.startBroadcast();
 
         nft = new BleuNFT();
-        nft.mint(msg.sender, 1);
+
+        for(uint i = 1; i <= 10; i++){
+            nft.mint(msg.sender, i);
+        }
+        nft.stake(1);
+        nft.stake(2);
+
+        
+        console.log("Contract deployed at:", address(nft));
+
+        console.log(nft.stakedOwner(1));
 
         vm.stopBroadcast();
     }
