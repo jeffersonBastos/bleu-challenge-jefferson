@@ -2,31 +2,38 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useBleuNFTTx } from "@/hook//useBleuNFTTx";
+import { useBleuNFT } from "@/hook/useBleuNFT";
+import { useUserTokens } from "../../../hook/useUserTokens";
 
 type MintSectionProps = {
   isContractOwner: boolean;
+  refetchTokens: () => Promise<void>;
 };
 
-export function MintSection({ isContractOwner }: MintSectionProps) {
-  const { mint } = useBleuNFTTx();
+export function MintSection({
+  isContractOwner,
+  refetchTokens,
+}: MintSectionProps) {
+  const { mint } = useBleuNFT();
   const [toAddress, setToAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!isContractOwner) {
-    return null; // se não for owner, não mostra nada
+    return null;
   }
 
   async function handleMint() {
     try {
-      if (!toAddress) return alert("Preencha o endereço de destino");
+      if (!toAddress) return alert("Fill in the destination address");
       setLoading(true);
       const tx = await mint(toAddress as `0x${string}`);
-      console.log("Mint TX:", tx);
-      alert("Mint realizado com sucesso!");
-    } catch (err: any) {
-      console.error(err);
-      alert(`Erro no Mint: ${err.message ?? err}`);
+      //TODO - handle successfully message
+      alert("Mint completed successfully!");
+      await refetchTokens();
+    } catch (err) {
+      //TODO - handle error
+      console.log(err);
+      alert(`Mint Error: ${err}`);
     } finally {
       setLoading(false);
     }
@@ -38,7 +45,7 @@ export function MintSection({ isContractOwner }: MintSectionProps) {
       <div className="flex flex-col gap-2">
         <input
           className="border p-2 rounded"
-          placeholder="Endereço 0x..."
+          placeholder="Address 0x..."
           value={toAddress}
           onChange={(e) => setToAddress(e.target.value)}
         />
