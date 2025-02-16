@@ -22,11 +22,11 @@ export function useContractOwner() {
           setIsContractOwner(false);
           return;
         }
-        const contractOwner: `0x${string}` = await publicClient.readContract({
+        const contractOwner = (await publicClient.readContract({
           address: BLEU_NFT_ADDRESS,
           abi: ContractAbi,
           functionName: "contractOwner",
-        });
+        })) as string;
 
         if (!cancelled) {
           setIsContractOwner(

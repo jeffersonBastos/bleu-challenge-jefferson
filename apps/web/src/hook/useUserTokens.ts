@@ -1,73 +1,74 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useEffect, useState, useCallback } from "react";
 import { PONDER_GRAPHQL_URL } from "./env";
+import { useAccount } from "wagmi";
+import { Token } from "../lib/types";
 
-interface MintEvent {
-  id: string;
-  owner: string;
-  tokenId: string;
-  eventType: string; // deve ser "Mint"
-  timestamp: string;
-}
-
-/**
- * Hook que retorna todos os tokenIds que o usuário recebeu em Mints.
- * (Simplesmente filtra eventType = "Mint" and owner = address)
- */
 export function useUserTokens() {
-  const { address } = useAccount();
-  const [tokenIds, setTokenIds] = useState<string[]>([]);
+  const { address: userAddress } = useAccount();
+  const [tokens, setUserTokens] = useState<Token[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!address) {
-      setTokenIds([]);
-      return;
-    }
-    let cancelled = false;
-
-    async function fetchTokens() {
-      try {
-        const query = `
-          query GetMyMints {
-            eventss(where: {
-              owner: "${address}"
-              eventType: "Mint"
-            }) {
+  const fetchUserTokens = useCallback(async () => {
+    if (!userAddress) return;
+    setLoading(true);
+    try {
+      const query = `
+          query GetUserTokens($user: String!) {
+            nftEvents(
+              where: { user: $user, eventType: "Mint" }
+              orderBy: "timestamp"
+            ) {
               items {
-                id
-                owner
                 tokenId
-                eventType
+                timestamp
+              }
+            }
+            stakedNFTs(
+              where: { user: $user }
+              orderBy: "timestamp"
+            ) {
+              items {
+                tokenId
                 timestamp
               }
             }
           }
         `;
-        const resp = await fetch(PONDER_GRAPHQL_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query }),
-        }).then((r) => r.json());
+      const response = await fetch(PONDER_GRAPHQL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, variables: { user: userAddress } }),
+      }).then((res) => res.json());
 
-        const events: MintEvent[] = resp?.data?.eventss?.items || [];
-        const distinctTokenIds = [...new Set(events.map((e) => e.tokenId))];
+      const editedTokens: Token[] = [];
 
-        if (!cancelled) {
-          setTokenIds(distinctTokenIds);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar tokens do usuário:", err);
-        setTokenIds([]);
-      }
+      const stakedItems: Token[] = response?.data?.stakedNFTs?.items || [];
+      editedTokens.push(
+        ...stakedItems.map((token) => ({ ...token, staked: true }))
+      );
+
+      const allTokens: Token[] = response?.data?.nftEvents?.items || [];
+      const unstakedTokens = allTokens.filter(
+        (token) => !stakedItems.some((tk) => tk.tokenId === token.tokenId)
+      );
+      editedTokens.push(
+        ...unstakedTokens.map((token) => ({ ...token, staked: false }))
+      );
+
+      setUserTokens(editedTokens);
+    } catch (error) {
+      //TODO - handle error
+      console.error("UseTokens Error", error);
+    } finally {
+      setLoading(false);
     }
+  }, [userAddress]);
 
-    fetchTokens();
-    return () => {
-      cancelled = true;
-    };
-  }, [address]);
+  useEffect(() => {
+    fetchUserTokens();
+  }, [userAddress, fetchUserTokens]);
 
-  return tokenIds;
+  return { tokens, loading, refetchTokens: fetchUserTokens };
 }
