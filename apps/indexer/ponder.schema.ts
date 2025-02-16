@@ -1,23 +1,23 @@
 import { onchainTable } from "ponder";
 
-// Tabela central para informações do usuário
+// Central table for user information
 export const User = onchainTable("User", (t) => ({
-  id: t.hex().primaryKey(), // Endereço da carteira
-  totalTokens: t.bigint().notNull(), // Total de tokens do BleuNFT (ex.: NFTs ou outro)
-  stakedCount: t.integer().notNull(), // Número de NFTs em stake
-  rewardBalance: t.bigint().notNull(), // Saldo de tokens de reward (do BleuRewardToken)
-  currentAttestation: t.text(), // Ex.: "MasterStaker" ou nulo
-  updatedAt: t.bigint().notNull(), // Última atualização (timestamp)
+  id: t.hex().primaryKey(),
+  totalTokens: t.bigint().notNull(),
+  stakedCount: t.integer().notNull(),
+  rewardBalance: t.bigint().notNull(),
+  currentAttestation: t.text(),
+  updatedAt: t.bigint().notNull(),
 }));
 
-// Tabela para cada NFT em stake
+// Table for each staked NFT
 export const StakedNFT = onchainTable("StakedNFT", (t) => ({
   tokenId: t.integer().primaryKey(),
-  user: t.hex().notNull(), // Endereço do usuário (relacionado à tabela User)
-  stakeTimestamp: t.bigint().notNull(), // Timestamp de quando o NFT foi staked
+  user: t.hex().notNull(), // User address (can be related to the User table)
+  timestamp: t.bigint().notNull(),
 }));
 
-// Tabela para registros de reivindicação de reward (se usado)
+// Table for reward claim records
 export const RewardClaim = onchainTable("RewardClaim", (t) => ({
   id: t.text().primaryKey(),
   user: t.hex().notNull(),
@@ -26,7 +26,7 @@ export const RewardClaim = onchainTable("RewardClaim", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-// Tabela para attestations (ex.: MasterStaker)
+// Table for attestations (e.g., MasterStaker)
 export const Attestation = onchainTable("Attestation", (t) => ({
   id: t.text().primaryKey(),
   user: t.hex().notNull(),
@@ -34,17 +34,17 @@ export const Attestation = onchainTable("Attestation", (t) => ({
   createdAtTimestamp: t.bigint().notNull(),
 }));
 
-// Tabela para eventos de NFTs (Mint, Staked, Unstaked, etc.)
+// Table for all NFT events (Mint, Staked, Unstaked, etc.)
 export const NftEvent = onchainTable("NftEvent", (t) => ({
   id: t.text().primaryKey(),
-  eventType: t.text().notNull(), // Ex.: "Mint", "Staked", "Unstaked", etc.
+  eventType: t.text().notNull(),
   user: t.hex().notNull(),
   tokenId: t.integer().notNull(),
   blockNumber: t.bigint().notNull(),
   timestamp: t.bigint().notNull(),
 }));
 
-// // Tabela para o contrato Token (caso seja necessário indexar outros tokens)
+// // Table for the Token contract (if it's necessary to index other tokens)
 // export const Token = onchainTable("Token", (t) => ({
 //   id: t.text().primaryKey(),
 //   address: t.hex().notNull(),
@@ -52,11 +52,11 @@ export const NftEvent = onchainTable("NftEvent", (t) => ({
 //   createdAtTimestamp: t.bigint().notNull(),
 // }));
 
-// Nova tabela para eventos de mint do BleuRewardToken
+// Table for mint events of BleuRewardToken
 export const RewardTokenMint = onchainTable("RewardTokenMint", (t) => ({
-  id: t.text().primaryKey(), // Ex.: transactionHash-logIndex
-  user: t.hex().notNull(), // Endereço do destinatário
-  amount: t.bigint().notNull(), // Quantidade de tokens mintados
+  id: t.text().primaryKey(),
+  user: t.hex().notNull(),
+  amount: t.bigint().notNull(),
   blockNumber: t.bigint().notNull(),
   timestamp: t.bigint().notNull(),
 }));

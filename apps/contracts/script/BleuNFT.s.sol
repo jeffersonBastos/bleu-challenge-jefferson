@@ -17,31 +17,28 @@ contract BleuNFTScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        // 1. Deploy do contrato de recompensa (BleuRewardToken)
+        // 1. Deploy the reward contract (BleuRewardToken)
         rewardToken = new BleuRewardToken();
         console.log("BleuRewardToken deployed at:", address(rewardToken));
 
-        // 2. Deploy do contrato de atestação (MasterStakerRegistry)
+        // 2. Deploy the attestation contract (MasterStakerRegistry)
         registry = new MasterStakerRegistry();
         console.log("MasterStakerRegistry deployed at:", address(registry));
-
-        // 3. Deploy do contrato NFT, passando o registry e o reward token
+        
+        // 3. Deploy the NFT contract, passing the registry and reward token
         nft = new BleuNFT(IMasterStakerRegistry(address(registry)), rewardToken);
         console.log("Contract deployed at:", address(nft));
 
-        // 4. Transfer ownership do rewardToken para o contrato NFT, permitindo que o NFT possa mintar recompensas
+        // 4. Transfer ownership of the rewardToken and  MasterStakerRegistry to the NFT contract
         rewardToken.transferOwnership(address(nft));
-        console.log("Ownership of reward token transferred to NFT contract");
+        registry.transferOwnership(address(nft));
 
-        // 5. Mint 5 NFTs para o deployer (msg.sender)
+        // 5. Mint 5 NFTs for the deployer (msg.sender)
         for (uint i = 1; i <= 5; i++){
             nft.mint(msg.sender);
         }
         console.log("Minted 5 NFTs to:", msg.sender);
 
-        nft.stake(1);
-
-        console.log("Staked tokens 1 and 2");
 
         vm.stopBroadcast();
     }

@@ -1,4 +1,3 @@
-import { parse } from "path";
 import { ponder } from "ponder:registry";
 import {
   NftEvent,
@@ -8,46 +7,10 @@ import {
   User,
   StakedNFT,
 } from "ponder:schema";
+import { log, upsertUser } from "./utils/helpers";
 
-// Função auxiliar para logs
-function logs(eventType: string, tokenId: string) {
-  console.log("\n=============================================\n");
-  console.log(`${eventType} completed successfully. tokenId: ${tokenId}`);
-  console.log("=============================================");
-}
+// ------------------ Handle BleuNFT: Mint - Stake - Unstake------------------
 
-async function upsertUser(
-  db: any,
-  userAddress: string,
-  updates: Partial<{
-    totalTokens: bigint;
-    stakedCount: number;
-    rewardBalance: bigint;
-    currentAttestation: string;
-  }>
-) {
-  const now = BigInt(Date.now());
-  const existing = await db.find(User, { id: userAddress });
-
-  if (existing) {
-    return db
-      .update(User, { id: userAddress })
-      .set({ ...updates, updatedAt: now });
-  } else {
-    return db.insert(User).values({
-      id: userAddress,
-      totalTokens: updates.totalTokens || BigInt(0),
-      stakedCount: updates.stakedCount || 0,
-      rewardBalance: updates.rewardBalance || BigInt(0),
-      currentAttestation: updates.currentAttestation || null,
-      updatedAt: now,
-    });
-  }
-}
-
-// ------------------ Handlers Existentes ------------------
-
-// Handler para o evento Mint do BleuNFT
 ponder.on("BleuNFT:Mint", async ({ event, context }) => {
   const { db } = context;
   const tokenId = event.args.tokenId.toString();
@@ -62,7 +25,6 @@ ponder.on("BleuNFT:Mint", async ({ event, context }) => {
     timestamp: BigInt(event.block.timestamp),
   });
 
-  // Atualiza totalTokens do usuário (supondo que totalTokens representa, por exemplo, a quantidade de NFTs)
   const existingUser = await db.find(User, { id: userAddress });
 
   const newTotal = existingUser
@@ -70,10 +32,9 @@ ponder.on("BleuNFT:Mint", async ({ event, context }) => {
     : BigInt(1);
   await upsertUser(db, userAddress, { totalTokens: newTotal });
 
-  logs("Mint (NFT)", tokenId);
+  log("Mint (NFT)", tokenId);
 });
 
-// Handler para o evento de Stake
 ponder.on("BleuNFT:Staked", async ({ event, context }) => {
   const { db } = context;
   const tokenId = event.args.tokenId.toString();
@@ -91,17 +52,16 @@ ponder.on("BleuNFT:Staked", async ({ event, context }) => {
   await db.insert(StakedNFT).values({
     tokenId: parseInt(tokenId),
     user: userAddress,
-    stakeTimestamp: BigInt(event.block.timestamp),
+    timestamp: BigInt(event.block.timestamp),
   });
 
   const existingUser = await db.find(User, { id: userAddress });
   const newStakedCount = existingUser ? existingUser.stakedCount + 1 : 1;
   await upsertUser(db, userAddress, { stakedCount: newStakedCount });
 
-  logs("Staked", tokenId);
+  log("Staked", tokenId);
 });
 
-// Handler para o evento de Unstake
 ponder.on("BleuNFT:Unstaked", async ({ event, context }) => {
   const { db } = context;
   const tokenId = event.args.tokenId.toString();
@@ -117,17 +77,16 @@ ponder.on("BleuNFT:Unstaked", async ({ event, context }) => {
   });
 
   await db.delete(StakedNFT, { tokenId: parseInt(tokenId) });
-  // { where: { id: stakedRecord.id } }
   const existingUser = await db.find(User, { id: userAddress });
   const newStakedCount = existingUser
     ? Math.max(existingUser.stakedCount - 1, 0)
     : 0;
   await upsertUser(db, userAddress, { stakedCount: newStakedCount });
 
-  logs("Unstaked", tokenId);
+  log("Unstaked", tokenId);
 });
 
-// Handler para o evento AttestationGranted (MasterStaker)
+// ------------------ Handle MasterStakerRegistry:AttestationGranted------------------
 ponder.on(
   "MasterStakerRegistry:AttestationGranted",
   async ({ event, context }) => {
@@ -147,7 +106,9 @@ ponder.on(
   }
 );
 
-// (Opcional) Handler para RewardClaim se você quiser manter essa lógica separada
+// ------------------ Handle Rewards------------------
+
+// (Optional) Handler for RewardClaim
 ponder.on("BleuNFT:RewardsClaimed", async ({ event, context }) => {
   const { db } = context;
   const userAddress = event.args.user;
@@ -161,13 +122,10 @@ ponder.on("BleuNFT:RewardsClaimed", async ({ event, context }) => {
     timestamp: BigInt(event.block.timestamp),
   });
 
-  // Exemplo: se desejar, pode ajustar o rewardBalance aqui (por exemplo, zerando após a reivindicação)
   await upsertUser(db, userAddress, { rewardBalance: BigInt(0) });
 
   console.log(`Rewards claimed by: ${userAddress} amount: ${amount}`);
 });
-
-// ------------------  HandlerBleuRewardToken ------------------
 
 ponder.on("BleuRewardToken:Mint", async ({ event, context }) => {
   const { db } = context;
@@ -182,7 +140,6 @@ ponder.on("BleuRewardToken:Mint", async ({ event, context }) => {
     timestamp: BigInt(event.block.timestamp),
   });
 
-  // Atualiza o saldo de reward do usuário na tabela User
   const existingUser = await db.find(User, { id: userAddress });
   const newRewardBalance = existingUser
     ? existingUser.rewardBalance + BigInt(amount)
