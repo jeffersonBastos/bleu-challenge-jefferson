@@ -9,8 +9,8 @@ import { useUserTokens } from "@/hook/useUserTokens";
 import { useBleuNFT } from "@/hook/useBleuNFT";
 import { useUser } from "../../hook/useUser";
 
-import { MintSection } from "./components/mintSection";
-import { TokenCard } from "./components/tokenCard";
+import { MintSection } from "./components/mint-section";
+import { TokenCard } from "./components/token-card";
 import FeedbackOverlay from "../../components/feedback-overlay";
 // import { RewardsSection } from "./components/rewardsSection";
 
