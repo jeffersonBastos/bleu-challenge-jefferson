@@ -34,6 +34,7 @@ export function useContractOwner() {
           );
         }
       } catch (err) {
+        //TODO - handle error
         console.error("Erro ao ler contractOwner:", err);
         setIsContractOwner(false);
       }

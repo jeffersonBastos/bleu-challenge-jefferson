@@ -12,7 +12,7 @@ import { useUser } from "../../hook/useUser";
 import { MintSection } from "./components/mint-section";
 import { TokenCard } from "./components/token-card";
 import FeedbackOverlay from "../../components/feedback-overlay";
-// import { RewardsSection } from "./components/rewardsSection";
+import { RewardsSection } from "./components/rewardsSection";
 
 const TOKENS_NEEDED_FOR_MASTERSTAKER = 5;
 
@@ -35,56 +35,57 @@ export default function DashboardPage() {
     }
   }, [feedback]);
 
-  const fetchData = useCallback(() => {
+  function fetchData() {
+    console.log("fetchData");
     refetchTokens();
     refetchUser();
-  }, [refetchTokens, refetchUser]);
+  }
 
-  const handleStake = useCallback(
-    async (tokenId: number, setLoading: (loading: boolean) => void) => {
-      try {
-        setLoading(true);
-        await stake(BigInt(tokenId));
-        setFeedback({
-          message: `Token ${tokenId} staked successfully!`,
-          type: "success",
-        });
-        fetchData();
-      } catch (err: any) {
-        setFeedback({
-          message: `Stake error: ${err?.message ?? err}`,
-          type: "error",
-        });
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [stake, fetchData]
-  );
+  async function handleStake(
+    tokenId: number,
+    setLoading: (loading: boolean) => void
+  ) {
+    try {
+      setLoading(true);
+      await stake(BigInt(tokenId));
+      fetchData();
+      setFeedback({
+        message: `Token ${tokenId} staked successfully!`,
+        type: "success",
+      });
+    } catch (err: any) {
+      setFeedback({
+        message: `${err?.message ? err?.message : "Stake error"}`,
+        type: "error",
+      });
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const handleUnstake = useCallback(
-    async (tokenId: number, setLoading: (loading: boolean) => void) => {
-      try {
-        setLoading(true);
-        await unstake(BigInt(tokenId));
-        setFeedback({
-          message: `Token ${tokenId} unstaked successfully!`,
-          type: "success",
-        });
-        fetchData();
-      } catch (err: any) {
-        setFeedback({
-          message: `Unstake error: ${err?.message ?? err}`,
-          type: "error",
-        });
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [unstake, fetchData]
-  );
+  async function handleUnstake(
+    tokenId: number,
+    setLoading: (loading: boolean) => void
+  ) {
+    try {
+      setLoading(true);
+      await unstake(BigInt(tokenId));
+      setFeedback({
+        message: `Token ${tokenId} unstaked successfully!`,
+        type: "success",
+      });
+      fetchData();
+    } catch (err: any) {
+      setFeedback({
+        message: `${err?.message ? err?.message : "Unstake error"}`,
+        type: "error",
+      });
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const tokensToMasterStaker =
     TOKENS_NEEDED_FOR_MASTERSTAKER - (user?.stakedCount || 0);

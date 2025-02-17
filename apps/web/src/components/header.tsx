@@ -22,7 +22,6 @@ const Header = () => {
 
       <nav className="hidden md:flex gap-4 text-lg">
         <NavLink href="/">Home</NavLink>
-        <NavLink href="/theme-showcase">Theme Showcase</NavLink>
         <NavLink href="/dashboard">Dashboard</NavLink>
       </nav>
       <div className="flex items-center gap-2">
