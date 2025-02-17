@@ -36,7 +36,6 @@ export function TokenCard({
   const canUnstake = token.staked && timeLeft === 0 && isMasterStaker;
   const buttonDisabled = isLoading || (token.staked && !canUnstake);
 
-
   return (
     <div
       className={`border p-3 rounded-md flex items-center justify-between }`}
@@ -49,7 +48,6 @@ export function TokenCard({
         )}
       </div>
       <Button
-        variant="secondary"
         onClick={() =>
           token.staked
             ? onUnstake(token.tokenId, setIsLoading)
@@ -58,7 +56,7 @@ export function TokenCard({
         disabled={buttonDisabled}
         className={buttonDisabled ? "opacity-50" : ""}
       >
-        {isLoading ? "..." : token.staked ? "UNSTAKE" : "STAKE"}
+        {isLoading ? "..." : token.staked ? "Unstake" : "Stake"}
       </Button>
     </div>
   );

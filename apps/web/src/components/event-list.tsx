@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { useNftEvents } from "../../../hook/useNftEvents";
-import { formatDate } from "../../../lib/utils";
+import { useNftEvents } from "../hook/useNftEvents";
+import { formatDate } from "../lib/utils";
 
 export function EventsList() {
   const { loading, nftEvents } = useNftEvents(5000);
 
   return (
-    <div className="border p-4 rounded-md w-full max-w-md">
-      <h2 className="text-lg font-semibold mb-2">Real-time events</h2>
+    <div className=" p-4 rounded-md max-w-md">
+      <h2 className="text-lg font-bold mb-2">Events</h2>
       {loading ? (
         <p className="text-sm text-gray-500">Loading...</p>
       ) : (
