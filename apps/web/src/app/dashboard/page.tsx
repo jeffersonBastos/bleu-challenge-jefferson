@@ -12,7 +12,6 @@ import { useUser } from "../../hook/useUser";
 import { MintSection } from "./components/mint-section";
 import { TokenCard } from "./components/token-card";
 import FeedbackOverlay from "../../components/feedback-overlay";
-import { RewardsSection } from "./components/rewardsSection";
 
 const TOKENS_NEEDED_FOR_MASTERSTAKER = 5;
 
@@ -21,7 +20,10 @@ export default function DashboardPage() {
   const isContractOwner = useContractOwner();
   const { user, refetchUser } = useUser();
   const { tokens, loading: tokensLoading, refetchTokens } = useUserTokens();
-  const { stake, unstake, claimRewards } = useBleuNFT();
+  const { stake, unstake } = useBleuNFT();
+
+  const tokensToMasterStaker =
+    TOKENS_NEEDED_FOR_MASTERSTAKER - (user?.stakedCount || 0);
 
   const [feedback, setFeedback] = useState<{
     message: string;
@@ -87,18 +89,6 @@ export default function DashboardPage() {
     }
   }
 
-  const tokensToMasterStaker =
-    TOKENS_NEEDED_FOR_MASTERSTAKER - (user?.stakedCount || 0);
-
-  // async function handleClaimRewards() {
-  //   try {
-  //     await claimRewards();
-  //   } catch (err: any) {
-  //     alert(`Error claiming rewards: ${err?.message ?? err}`);
-  //     console.error(err);
-  //   }
-  // }
-
   if (!isConnected) {
     return (
       <div className="p-4 flex justify-center">
@@ -131,11 +121,6 @@ export default function DashboardPage() {
           </span>
         )}
       </div>
-
-      {/* <RewardsSection
-          stakedCount={user?.stakedCount || 0}
-          onClaim={handleClaimRewards}
-        /> */}
 
       {/* If you own the contract, display Mint block */}
       <MintSection

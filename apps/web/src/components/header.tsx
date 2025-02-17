@@ -23,6 +23,7 @@ const Header = () => {
       <nav className="hidden md:flex gap-4 text-lg">
         <NavLink href="/">Home</NavLink>
         <NavLink href="/dashboard">Dashboard</NavLink>
+        <NavLink href="/rewards">Claim Rewards</NavLink>
       </nav>
       <div className="flex items-center gap-2">
         <ConnectWalletButton />
@@ -57,11 +58,8 @@ const Header = () => {
               <NavLink href="/" onClick={() => setMobileMenuOpen(false)}>
                 Home
               </NavLink>
-              <NavLink
-                href="/theme-showcase"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Theme Showcase
+              <NavLink href="/rewards" onClick={() => setMobileMenuOpen(false)}>
+                Claim Rewards
               </NavLink>
               <NavLink
                 href="/dashboard"
