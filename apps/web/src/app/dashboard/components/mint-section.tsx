@@ -40,7 +40,7 @@ export function MintSection({
   }
 
   return (
-    <div className="border p-4 rounded-md w-full max-w-sm">
+    <div className="border p-4 rounded-md">
       <h2 className="text-lg font-semibold mb-2">Mint Token</h2>
       <div className="flex flex-col gap-2">
         <input

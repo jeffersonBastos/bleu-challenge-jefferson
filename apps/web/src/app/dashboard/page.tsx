@@ -108,32 +108,34 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="relative p-4 flex flex-col gap-6">
+    <div className="relative p-4 flex  flex-col gap-6 ml-auto mr-auto w-full max-w-xl">
       {feedback && (
         <FeedbackOverlay message={feedback.message} type={feedback.type} />
       )}
 
-      <div className="flex flex-col gap-4">
-        {/* Stake count and MasterStaker info */}
-        <div className="flex items-center gap-4">
-          <span className="text-sm">
-            Staked tokens: <strong>{user?.stakedCount || 0}</strong>
+      {/* Stake count and MasterStaker info */}
+      <div className="flex  gap-1 flex-col items-start">
+        <span>
+          Staked tokens: <strong>{user?.stakedCount || 0}</strong>
+        </span>
+        {user?.currentAttestation ? (
+          <span className="text-green-600">You are MasterStaker</span>
+        ) : (
+          <span className="text-gray-600">
+            Stake{" "}
+            <strong>
+              {tokensToMasterStaker} more token
+              {tokensToMasterStaker !== 1 ? "s" : ""}{" "}
+            </strong>
+            to become MasterStaker
           </span>
-          {user?.currentAttestation ? (
-            <span className="text-green-600">You are MasterStaker</span>
-          ) : (
-            <span className="text-gray-600">
-              Stake {tokensToMasterStaker} more token
-              {tokensToMasterStaker !== 1 ? "s" : ""} to become MasterStaker
-            </span>
-          )}
-        </div>
+        )}
+      </div>
 
-        {/* <RewardsSection
+      {/* <RewardsSection
           stakedCount={user?.stakedCount || 0}
           onClaim={handleClaimRewards}
         /> */}
-      </div>
 
       {/* If you own the contract, display Mint block */}
       <MintSection
